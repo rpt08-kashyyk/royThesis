@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 
+
 var propertySchema = new mongoose.Schema({
 propertyID: Number,
 lattitude: Number,
@@ -15,57 +16,35 @@ existingReservations: [{startDate:Date,endDate:Date}]
 var PropertyModel = mongoose.model('Property', propertySchema);
 
 // findAll retrieves all stories
-function findAll() {
-   return new Promise(function(resolve, reject){
-    PropertyModel.find({}, function(err, docs) {
-      if(err) reject(err);
-      resolve(docs);
-    });
-  })/*.then(function(docs) {
-    console.log(LOG FROM SERVER : FOUND SO MANY STOREIES ",docs.length);
-    return docs;
-  });*/
+function findAll(callback) {
+    PropertyModel.find({}, (err, docs) => {
+      if (err) throw err;
+      callback(docs);
+      console.log("FOUND ONE DOCUMENT");
+    })
+
 }
 
-
-
 // findOne will retrieve the Property associated with the given id
-function findOne(id) {
-   return new Promise(function(resolve, reject){
-    PropertyModel.find({propertyID: id}, function(err, docs){
-      if (err) reject(err);
-      resolve(docs);
-    });
-  })/*.then(function(docs){
-    console.log("LOG FROM SERVER : FOUND ONE Property");
-    return docs;
-  })*/
-
+function findOne(id, callback) {
+    PropertyModel.find({propertyID: id}, (err, docs)=>{
+      if(err) throw err;
+      callback(docs);
+      console.log("FOUND DOCUMENT FOR ID ", id);
+    })
 }
 
 // insertOne inserts a Property into the db
 function insertOne(Property, callback) {
-   return new Promise(function(resolve, reject) {
-    PropertyModel.create(Property, function(err){
-      if (err) reject(err);
-    }).then(function(){
-      console.log("LOG FROM SERVER : INSERTED ONE Property");
-    });
-  });
+       PropertyModel.create(Property)
+       .then((data) => console.log("INSERTED ONE DOCUMENT"));
+
 }
 
 //insert many documents to db at once
 function insertMany(PropertyObjArray) {
-   console.log("inside inerst many ", PropertyModel,PropertyObjArray.length);
-   return new Promise(function(resolve, reject){
-    PropertyModel.insertMany(PropertyObjArray, function(err){
-      if (err) reject(err);
-      resolve(PropertyObjArray)
-    }).then(function(data){
-      console.log("LOG FROM SERVER : INSERTED SO MANY DOCUMENTS TO DB ", data.length);
-    });
-  });
-
+    PropertyModel.insertMany(PropertyObjArray)
+    .then((data)=>console.log("INSERTED DOCUMENTS ", data.length));
 }
 
 exports.findOne = findOne;
