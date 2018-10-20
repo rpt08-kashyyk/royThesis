@@ -26,7 +26,7 @@ function findAll(callback) {
 }
 
 // findOne will retrieve the Property associated with the given id
-function findOne(id, callback) {
+function findOne(callback, id) {
     PropertyModel.find({propertyID: id}, (err, docs)=>{
       if(err) throw err;
       callback(docs);
@@ -35,7 +35,7 @@ function findOne(id, callback) {
 }
 
 // insertOne inserts a Property into the db
-function insertOne(Property, callback) {
+function insertOne(callback, Property) {
        PropertyModel.create(Property)
        .then((data) => console.log("INSERTED ONE DOCUMENT"));
 
